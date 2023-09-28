@@ -1,8 +1,14 @@
 const typesUser = `#graphql
 type User {
+  id: ID!
   email: String
   name: String
   password: String
+## an array of User in following
+  following: [User]
+  followers: [User]
+## an array of User in Tweet
+  tweet: [Tweet]
 }
 
 type Query {

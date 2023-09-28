@@ -14,13 +14,19 @@ model User {
   email String @unique
   name String
   password String
+
+  // one to many relationship
   following Follows[] @relation("following")
   followers Follows[] @relation("followers")
   tweet Tweets[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 model Follows {
+  // instead of storing whole data of User, only a refrence
+  // of user is stored and that is gonna be used to access
+  // the whole data.
   following User @relation("following",fields: [followingId], references: [id])
   followers User @relation("followers",fields: [followersId], references: [id])
   followersId String

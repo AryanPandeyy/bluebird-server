@@ -1,9 +1,10 @@
 import { prismaClient } from "../../db/index";
 
 const queries = {
-  queryUser: async (): Promise<void> => {
+  queryUser: async (): Promise<any> => {
     try {
-      await prismaClient.user.findMany();
+      const result = await prismaClient.user.findMany();
+      return result;
     } catch (err) {
       console.log("ERROR: queryUser ", err);
     }
