@@ -1,55 +1,18 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = require("@apollo/server");
 const standalone_1 = require("@apollo/server/standalone");
-const index_1 = require("./db/index");
+const user_1 = __importDefault(require("./model/user"));
 const typeDefs = `#graphql
-    type User {
-    id: String
-    email: String
-    name: String
-    password: String
-    }
-type Query {
-user: [User]
-}
-input createUserInput {
-name: String
-email: String
-password: String
-}
-type Mutation {
-    createUser(message: createUserInput): User
-}
+  ${user_1.default.types}
 `;
-const user = [
-    {
-        email: "hi@gmail.com",
-        name: "hi",
-        password: "123",
-    },
-];
+console.log("DATA ", user_1.default.types, user_1.default.resolvers);
 const resolvers = {
-    Query: {
-        user: () => user,
-    },
-    Mutation: {
-        createUser: async (root, { message, }) => {
-            console.log("INPUT ", message.email, message.name, message.password, root);
-            try {
-                await index_1.prismaClient.user.create({
-                    data: {
-                        email: message.email,
-                        name: message.name,
-                        password: message.password,
-                    },
-                });
-            }
-            catch (err) {
-                console.log(err);
-            }
-        },
-    },
+    Query: Object.assign({}, user_1.default.resolvers.queries),
+    Mutation: Object.assign({}, user_1.default.resolvers.mutations),
 };
 const server = new server_1.ApolloServer({
     typeDefs,

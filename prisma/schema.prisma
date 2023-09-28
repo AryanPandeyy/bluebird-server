@@ -14,4 +14,24 @@ model User {
   email String @unique
   name String
   password String
+  following Follows[] @relation("following")
+  followers Follows[] @relation("followers")
+  tweet Tweets[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Follows {
+  following User @relation("following",fields: [followingId], references: [id])
+  followers User @relation("followers",fields: [followersId], references: [id])
+  followersId String
+  followingId String
+  @@id([followersId, followingId])
+}
+model Tweets {
+  id String @id @default(uuid())
+  content String
+  author User @relation(fields: [authorId], references: [id])
+  authorId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
