@@ -3,7 +3,11 @@ import { prismaClient } from "../../db/index";
 const queries = {
   queryTweets: async (): Promise<any> => {
     try {
-      const result = await prismaClient.tweets.findMany();
+      const result = await prismaClient.tweets.findMany({
+        include: {
+          author: true,
+        },
+      });
       return result;
     } catch (err) {
       console.log("ERROR: queryUser ", err);
