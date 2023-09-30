@@ -2,6 +2,8 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import User from "./model/user";
 import Tweet from "./model/tweet";
+import { IncomingMessage } from "http";
+import { verifyJWT } from "./model/token/jwt";
 const typeDefs = `#graphql
   ${User.typesUser}
   ${Tweet.typesTweet}
@@ -17,31 +19,41 @@ const resolvers = {
     ...Tweet.resolvers.mutations,
   },
 };
-// const getUser = async (token: string): Promise<void> => {
-//   console.log(token);
-// };
+const getUser = (req: IncomingMessage): any => {
+  // Get the user token from the headers.
+  // https://www.apollographql.com/tutorials/side-quest-auth/02-authentication-identifying-users
+  // https://www.howtographql.com/graphql-js/6-authentication/
+  const authHeader = req.headers.authorization || "";
+  // console.log("TOKEN FROM APOLLO ", authHeader);
+  const token = authHeader.split(" ")[1];
+  if (!token) {
+    throw new Error("No token found");
+  }
+  const { userId } = verifyJWT(token, "123");
+  console.log(userId);
+  // Try to retrieve a user with the token
+  // const user = await getUser(token);
+  // Add the user to the context
+  return { userId };
+};
 const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
 const start = async () => {
   const { url } = await startStandaloneServer(server, {
+    // https://www.apollographql.com/docs/apollo-server/data/context
     // Note: This example uses the `req` argument to access headers,
     // but the arguments received by `context` vary by integration.
     // This means they vary for Express, Fastify, Lambda, etc.
 
     // For `startStandaloneServer`, the `req` and `res` objects are
     // `http.IncomingMessage` and `http.ServerResponse` types.
-    // https://www.apollographql.com/docs/apollo-server/data/context
     listen: { port: 4000 },
-    context: async ({ req, res }) => {
-      // Get the user token from the headers.
-      const token = req.headers.authorization || "";
-      console.log("TOKEN FROM APOLLO ", token);
-      // Try to retrieve a user with the token
-      // const user = await getUser(token);
-      // Add the user to the context
-      return { token };
+    context: async ({ req }) => {
+      return {
+        userId: getUser(req),
+      };
     },
   });
   console.log("URL IS", `${url}`);

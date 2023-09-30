@@ -16,28 +16,15 @@ const queries = {
 };
 
 const mutations = {
-  createTweet: async (
-    root: any,
-    {
-      message,
-    }: {
-      message: {
-        content: string;
-        authorId: string;
-      };
-    },
-  ): Promise<void> => {
-    console.log(
-      "INPUT from createTweet ",
-      message.content,
-      message.authorId,
-      root,
-    );
+  createTweet: async (root: any, args, contextValue, info): Promise<void> => {
+    console.log("INPUT from createTweet ", args, root);
+    const { userId } = contextValue;
+    console.log("Context Value ", userId, contextValue, info);
     try {
       await prismaClient.tweets.create({
         data: {
-          content: message.content,
-          authorId: message.authorId,
+          content: args.content,
+          authorId: userId.userId,
         },
       });
     } catch (err) {

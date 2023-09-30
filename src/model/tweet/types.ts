@@ -14,13 +14,9 @@ type Query {
 }
 
 
-input createTweetInput {
-  content: String
-  authorId: String
-}
 
 type Mutation {
-  createTweet(message: createTweetInput): ID
+  createTweet(content: String!): ID
 }
 `;
 

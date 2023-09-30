@@ -17,13 +17,19 @@ type Query {
 
 
 input createUserInput {
-  email: String
-  name: String
-  password: String
+  email: String!,
+  name: String!,
+  password: String!
+}
+
+type AuthPayLoad {
+ token: String
+ user: User
 }
 
 type Mutation {
-  createUser(message: createUserInput): ID
+  createUser(message: createUserInput): AuthPayLoad
+signInUser(email: String!, password: String!): AuthPayLoad
 }
  `;
 
