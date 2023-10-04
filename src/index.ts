@@ -24,17 +24,22 @@ const getUser = (req: IncomingMessage): any => {
   // https://www.apollographql.com/tutorials/side-quest-auth/02-authentication-identifying-users
   // https://www.howtographql.com/graphql-js/6-authentication/
   const authHeader = req.headers.authorization || "";
-  // console.log("TOKEN FROM APOLLO ", authHeader);
+  console.log("AUTHHEADER FROM CONTEXT ", authHeader);
   const token = authHeader.split(" ")[1];
+  console.log("TOKEN FROM CONTEXT ", token);
+  if (token == "null") {
+    return null;
+  }
   if (!token) {
-    throw new Error("No token found");
+    return null;
+    // throw new Error("No token found");
   }
   const { userId } = verifyJWT(token, "123");
   console.log(userId);
   // Try to retrieve a user with the token
   // const user = await getUser(token);
   // Add the user to the context
-  return { userId };
+  return userId;
 };
 const server = new ApolloServer({
   typeDefs,

@@ -6,6 +6,7 @@ export const signJWT = (payload: object, key: string): string => {
   return token;
 };
 export const verifyJWT = (token: string, key: string): string | JwtPayload => {
+  console.log("TOKEN VERIFYJWT ", token);
   const verification = jwt.verify(token, key);
   return verification;
 };

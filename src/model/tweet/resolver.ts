@@ -19,16 +19,21 @@ const mutations = {
   createTweet: async (root: any, args, contextValue, info): Promise<void> => {
     console.log("INPUT from createTweet ", args, root);
     const { userId } = contextValue;
-    console.log("Context Value ", userId, contextValue, info);
-    try {
-      await prismaClient.tweets.create({
-        data: {
-          content: args.content,
-          authorId: userId.userId,
-        },
-      });
-    } catch (err) {
-      console.log("ERROR of createTweet : ", err);
+    console.log("Context Value ", contextValue, userId);
+    // console.log("Context Value ", userId, contextValue, info);
+    if (userId) {
+      try {
+        await prismaClient.tweets.create({
+          data: {
+            content: args.content,
+            authorId: userId,
+          },
+        });
+      } catch (err) {
+        console.log("ERROR of createTweet : ", err);
+      }
+    } else {
+      throw new Error("Please Login First");
     }
   },
 };

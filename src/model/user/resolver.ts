@@ -27,7 +27,6 @@ const mutations = {
     },
   ): Promise<any> => {
     console.log("INPUT ", args.email, args.name, args.password, root);
-    // DONE hashing password
     const password = await bcrypt.hash(args.password, 10);
     try {
       const user = await prismaClient.user.create({
@@ -59,7 +58,7 @@ const mutations = {
     if (!valid) {
       throw new Error("Wrong Credential");
     }
-    const token = signJWT({ userId: user.id }, "123");
+    const token = signJWT({ userId: user.id, email: user.email }, "123");
     return {
       token,
       user,
@@ -67,5 +66,8 @@ const mutations = {
   },
 };
 
-const resolvers = { queries, mutations };
+const resolvers = {
+  queries,
+  mutations,
+};
 export default resolvers;

@@ -29,7 +29,7 @@ type AuthPayLoad {
 
 type Mutation {
   createUser(message: createUserInput): AuthPayLoad
-signInUser(email: String!, password: String!): AuthPayLoad
+  signInUser(email: String!, password: String!): AuthPayLoad
 }
  `;
 
