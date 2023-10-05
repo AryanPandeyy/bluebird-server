@@ -4,6 +4,10 @@ const queries = {
   queryTweets: async (): Promise<any> => {
     try {
       const result = await prismaClient.tweets.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+
         include: {
           author: true,
         },

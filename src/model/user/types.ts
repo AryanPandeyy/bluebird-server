@@ -13,6 +13,7 @@ type User {
 
 type Query {
   queryUser: [User]
+  queryUserById: User
 }
 
 

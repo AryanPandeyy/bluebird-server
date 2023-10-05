@@ -11,6 +11,20 @@ const queries = {
       console.log("ERROR: queryUser ", err);
     }
   },
+  queryUserById: async (root, id, contextValue): Promise<any> => {
+    try {
+      const { userId } = contextValue;
+      console.log("CONTEXTVALUE QUERYUSERBYID ", contextValue);
+      const result = await prismaClient.user.findUniqueOrThrow({
+        where: {
+          id: userId,
+        },
+      });
+      return result;
+    } catch (e) {
+      console.log("ERROR: queryUserById ", e);
+    }
+  },
 };
 
 const mutations = {
