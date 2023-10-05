@@ -5,8 +5,13 @@ const queries = {
   // (parent,args,contextValue,info)
   queryUser: async (): Promise<any> => {
     try {
-      const result = await prismaClient.user.findMany();
-      return { result };
+      const result = await prismaClient.user.findMany({
+        include: {
+          tweet: true,
+        },
+      });
+      console.log("QUERYUSER ", result);
+      return result;
     } catch (err) {
       console.log("ERROR: queryUser ", err);
     }
@@ -18,6 +23,29 @@ const queries = {
       const result = await prismaClient.user.findUniqueOrThrow({
         where: {
           id: userId,
+        },
+        include: {
+          tweet: true,
+          followers: true,
+          following: true,
+        },
+      });
+      return result;
+    } catch (e) {
+      console.log("ERROR: queryUserById ", e);
+    }
+  },
+  queryUserByEmail: async (root, id): Promise<any> => {
+    try {
+      console.log("QUERYUSERBYEMAIL ", id);
+      const result = await prismaClient.user.findUniqueOrThrow({
+        where: {
+          id: id.id,
+        },
+        include: {
+          tweet: true,
+          followers: true,
+          following: true,
         },
       });
       return result;

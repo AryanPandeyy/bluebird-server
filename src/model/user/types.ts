@@ -14,6 +14,7 @@ type User {
 type Query {
   queryUser: [User]
   queryUserById: User
+  queryUserByEmail(id: ID!): User
 }
 
 
